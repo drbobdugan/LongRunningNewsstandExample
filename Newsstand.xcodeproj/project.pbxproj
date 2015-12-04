@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		284277641C120CA0001BAC2E /* README in Resources */ = {isa = PBXBuildFile; fileRef = 284277631C120CA0001BAC2E /* README */; };
+		284277661C120CAD001BAC2E /* notify.py in Resources */ = {isa = PBXBuildFile; fileRef = 284277651C120CAD001BAC2E /* notify.py */; };
 		285C6A421C0CED690014CC0E /* BackgroundTimeRemainingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 285C6A411C0CED690014CC0E /* BackgroundTimeRemainingUtility.m */; };
 		289125581C0DF9F500478EAB /* FileLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 289125571C0DF9F500478EAB /* FileLog.m */; };
 		64063B24144CAF320004B625 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64063B23144CAF320004B625 /* UIKit.framework */; };
@@ -38,6 +40,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		284277631C120CA0001BAC2E /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		284277651C120CAD001BAC2E /* notify.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = notify.py; sourceTree = "<group>"; };
 		285C6A401C0CED4B0014CC0E /* BackgroundTimeRemainingUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundTimeRemainingUtility.h; sourceTree = "<group>"; };
 		285C6A411C0CED690014CC0E /* BackgroundTimeRemainingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundTimeRemainingUtility.m; sourceTree = "<group>"; };
 		289125571C0DF9F500478EAB /* FileLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLog.m; sourceTree = "<group>"; };
@@ -105,6 +109,8 @@
 		64063B14144CAF320004B625 = {
 			isa = PBXGroup;
 			children = (
+				284277651C120CAD001BAC2E /* notify.py */,
+				284277631C120CA0001BAC2E /* README */,
 				64FFD774145C8F4500F1AAAD /* NSString+Base64.h */,
 				64FFD775145C8F4500F1AAAD /* NSString+Base64.m */,
 				64063B49144D63EB0004B625 /* issues.plist */,
@@ -239,10 +245,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				284277661C120CAD001BAC2E /* notify.py in Resources */,
 				64063B2E144CAF320004B625 /* InfoPlist.strings in Resources */,
 				64063B3E144CB04A0004B625 /* StoreViewController.xib in Resources */,
 				64063B40144CB0DE0004B625 /* icon.png in Resources */,
 				64063B42144CB0E60004B625 /* icon@2x.png in Resources */,
+				284277641C120CA0001BAC2E /* README in Resources */,
 				64063B44144D5BE10004B625 /* icon_newsstand.png in Resources */,
 				64063B4A144D63EB0004B625 /* issues.plist in Resources */,
 				64063B4F144D80CF0004B625 /* IssueTableCell.xib in Resources */,

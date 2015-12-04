@@ -1,5 +1,8 @@
 Newsstand Tutorial README
 =========================
+This is a slightly modified version of the Viggiosoft Newsstand Tutorial.  The goal of the modification was to understand the background time available to a Long Running Task of type newstand-content.  To understand this modified version, consult the wiki for the GitHub repository [here](https://github.com/drbobdugan/LongRunningNewsstandExample/wiki).
+
+----- Start of Original README -----
 
 This is the reference source code for the two parts tutorial published in my blog: 
 [Newsstand Tutorial](http://www.viggiosoft.com/blog/blog/2011/10/17/ios-newsstand-tutorial/)
@@ -20,6 +23,7 @@ My suggestion is that you don't use this code to run the example but only as ref
 Besides take care that this code is for a tutorial only, so it is not optmizied for memory management and many coding shortcuts
 that are good for a tutorial should be better planned for a real app.
 
+----- End of Original README -----
  
 
 
