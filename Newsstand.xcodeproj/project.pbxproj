@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		285C6A421C0CED690014CC0E /* BackgroundTimeRemainingUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 285C6A411C0CED690014CC0E /* BackgroundTimeRemainingUtility.m */; };
+		289125581C0DF9F500478EAB /* FileLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 289125571C0DF9F500478EAB /* FileLog.m */; };
 		64063B24144CAF320004B625 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64063B23144CAF320004B625 /* UIKit.framework */; };
 		64063B26144CAF320004B625 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64063B25144CAF320004B625 /* Foundation.framework */; };
 		64063B28144CAF320004B625 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64063B27144CAF320004B625 /* CoreGraphics.framework */; };
@@ -25,7 +27,6 @@
 		64063B53144DC1680004B625 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64063B52144DC1680004B625 /* QuickLook.framework */; };
 		6452268E145C3DA5008AC4C7 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6452268D145C3DA5008AC4C7 /* StoreKit.framework */; };
 		64522692145C859F008AC4C7 /* ReceiptCheck.m in Sources */ = {isa = PBXBuildFile; fileRef = 64522691145C859F008AC4C7 /* ReceiptCheck.m */; };
-		64DAD409144F0867002740C6 /* libUAirship-1.1.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DAD408144F0867002740C6 /* libUAirship-1.1.0.a */; };
 		64DAD40C144F0881002740C6 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DAD40B144F0881002740C6 /* CFNetwork.framework */; };
 		64DAD40E144F088B002740C6 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DAD40D144F088B002740C6 /* MobileCoreServices.framework */; };
 		64DAD410144F0891002740C6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64DAD40F144F0891002740C6 /* Security.framework */; };
@@ -37,6 +38,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		285C6A401C0CED4B0014CC0E /* BackgroundTimeRemainingUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundTimeRemainingUtility.h; sourceTree = "<group>"; };
+		285C6A411C0CED690014CC0E /* BackgroundTimeRemainingUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackgroundTimeRemainingUtility.m; sourceTree = "<group>"; };
+		289125571C0DF9F500478EAB /* FileLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileLog.m; sourceTree = "<group>"; };
+		289125591C0DFA0600478EAB /* FileLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileLog.h; sourceTree = "<group>"; };
 		64063B1F144CAF320004B625 /* Newsstand.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Newsstand.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64063B23144CAF320004B625 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		64063B25144CAF320004B625 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -62,7 +67,6 @@
 		6452268D145C3DA5008AC4C7 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		64522690145C859F008AC4C7 /* ReceiptCheck.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReceiptCheck.h; path = ../ReceiptCheck.h; sourceTree = "<group>"; };
 		64522691145C859F008AC4C7 /* ReceiptCheck.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReceiptCheck.m; path = ../ReceiptCheck.m; sourceTree = "<group>"; };
-		64DAD408144F0867002740C6 /* libUAirship-1.1.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libUAirship-1.1.0.a"; path = "../Airship/libUAirship-1.1.0.a"; sourceTree = "<group>"; };
 		64DAD40B144F0881002740C6 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		64DAD40D144F088B002740C6 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		64DAD40F144F0891002740C6 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -87,7 +91,6 @@
 				64DAD410144F0891002740C6 /* Security.framework in Frameworks */,
 				64DAD40E144F088B002740C6 /* MobileCoreServices.framework in Frameworks */,
 				64DAD40C144F0881002740C6 /* CFNetwork.framework in Frameworks */,
-				64DAD409144F0867002740C6 /* libUAirship-1.1.0.a in Frameworks */,
 				64063B53144DC1680004B625 /* QuickLook.framework in Frameworks */,
 				64063B51144D97D40004B625 /* NewsstandKit.framework in Frameworks */,
 				64063B24144CAF320004B625 /* UIKit.framework in Frameworks */,
@@ -133,7 +136,6 @@
 				64DAD40F144F0891002740C6 /* Security.framework */,
 				64DAD40D144F088B002740C6 /* MobileCoreServices.framework */,
 				64DAD40B144F0881002740C6 /* CFNetwork.framework */,
-				64DAD408144F0867002740C6 /* libUAirship-1.1.0.a */,
 				64063B52144DC1680004B625 /* QuickLook.framework */,
 				64063B50144D97D40004B625 /* NewsstandKit.framework */,
 				64063B23144CAF320004B625 /* UIKit.framework */,
@@ -150,6 +152,8 @@
 				64522691145C859F008AC4C7 /* ReceiptCheck.m */,
 				64063B32144CAF320004B625 /* AppDelegate.h */,
 				64063B33144CAF320004B625 /* AppDelegate.m */,
+				285C6A401C0CED4B0014CC0E /* BackgroundTimeRemainingUtility.h */,
+				285C6A411C0CED690014CC0E /* BackgroundTimeRemainingUtility.m */,
 				64063B2A144CAF320004B625 /* Supporting Files */,
 				64063B3A144CB04A0004B625 /* StoreViewController.h */,
 				64063B3B144CB04A0004B625 /* StoreViewController.m */,
@@ -157,6 +161,8 @@
 				64063B4E144D80CF0004B625 /* IssueTableCell.xib */,
 				64063B4B144D749A0004B625 /* Publisher.h */,
 				64063B4C144D749A0004B625 /* Publisher.m */,
+				289125591C0DFA0600478EAB /* FileLog.h */,
+				289125571C0DF9F500478EAB /* FileLog.m */,
 			);
 			path = Newsstand;
 			sourceTree = "<group>";
@@ -200,6 +206,16 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 				ORGANIZATIONNAME = i3factory;
+				TargetAttributes = {
+					64063B1E144CAF320004B625 = {
+						DevelopmentTeam = M6DXTGUM8K;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = 64063B19144CAF320004B625 /* Build configuration list for PBXProject "Newsstand" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -246,6 +262,8 @@
 				64063B4D144D749A0004B625 /* Publisher.m in Sources */,
 				64522692145C859F008AC4C7 /* ReceiptCheck.m in Sources */,
 				64FFD776145C8F4500F1AAAD /* NSString+Base64.m in Sources */,
+				289125581C0DF9F500478EAB /* FileLog.m in Sources */,
+				285C6A421C0CED690014CC0E /* BackgroundTimeRemainingUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,7 +300,8 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stonehill.Newsstand;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -299,8 +318,9 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stonehill.Newsstand;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -309,15 +329,17 @@
 		64063B38144CAF320004B625 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Newsstand/Newsstand-Prefix.pch";
-				HEADER_SEARCH_PATHS = "../Airship/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Newsstand/Newsstand-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../Airship\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stonehill.Newsstand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -325,15 +347,17 @@
 		64063B39144CAF320004B625 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Newsstand/Newsstand-Prefix.pch";
-				HEADER_SEARCH_PATHS = "../Airship/**";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "Newsstand/Newsstand-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../Airship\"",
-				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = edu.stonehill.Newsstand;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

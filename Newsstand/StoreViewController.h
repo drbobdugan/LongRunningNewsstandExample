@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 viggiosoft. All rights reserved.
 //
 
+#import "BackgroundTimeRemainingUtility.h"
 #import <UIKit/UIKit.h>
 #import "Publisher.h"
 #import <NewsstandKit/NewsstandKit.h>

@@ -3,6 +3,7 @@
 //  Newsstand
 //
 //  Created by Carlo Vigiani on 17/Oct/11.
+//  Modified by Bob Dugan on 01/Dec/15
 //  Copyright (c) 2011 viggiosoft. All rights reserved.
 //
 
@@ -218,51 +219,6 @@ static NSString *issueTableCellId = @"IssueTableCell";
     
 }
 
-#pragma mark - NSURLConnectionDownloadDelegate
-
--(void)updateProgressOfConnection:(NSURLConnection *)connection withTotalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
-    // get asset
-    NKAssetDownload *dnl = connection.newsstandAssetDownload;
-    UITableViewCell *cell = [table_ cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[[dnl.userInfo objectForKey:@"Index"] intValue] inSection:0]];
-    UIProgressView *progressView = (UIProgressView *)[cell viewWithTag:102];
-    progressView.alpha=1.0;
-    [[cell viewWithTag:103] setAlpha:0.0];
-    progressView.progress=1.f*totalBytesWritten/expectedTotalBytes;   
-}
-
--(void)connection:(NSURLConnection *)connection didWriteData:(long long)bytesWritten totalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
-    [self updateProgressOfConnection:connection withTotalBytesWritten:totalBytesWritten expectedTotalBytes:expectedTotalBytes];
-}
-
--(void)connectionDidResumeDownloading:(NSURLConnection *)connection totalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
-    NSLog(@"Resume downloading %f",1.f*totalBytesWritten/expectedTotalBytes);
-    [self updateProgressOfConnection:connection withTotalBytesWritten:totalBytesWritten expectedTotalBytes:expectedTotalBytes];    
-}
-
--(void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {
-    // copy file to destination URL
-    NKAssetDownload *dnl = connection.newsstandAssetDownload;
-    NKIssue *nkIssue = dnl.issue;
-    NSString *contentPath = [publisher downloadPathForIssue:nkIssue];
-    NSError *moveError=nil;
-    NSLog(@"File is being copied to %@",contentPath);
-    
-    if([[NSFileManager defaultManager] moveItemAtPath:[destinationURL path] toPath:contentPath error:&moveError]==NO) {
-        NSLog(@"Error copying file from %@ to %@",destinationURL,contentPath);
-    }
-    
-    // update the Newsstand icon
-    UIImage *img = [publisher coverImageForIssue:nkIssue];
-    if(img) {
-        [[UIApplication sharedApplication] setNewsstandIconImage:img]; 
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
-    }
-    
-    [table_ reloadData];
-}
-
-
-
 #pragma mark - QuickLook
 
 - (NSInteger) numberOfPreviewItemsInPreviewController: (QLPreviewController *) controller {
@@ -445,6 +401,62 @@ static NSString *issueTableCellId = @"IssueTableCell";
          ];
     }
 }
-                            
 
+
+#pragma mark - NSURLConnectionDownloadDelegate
+
+//
+// Helper routine to update UI when download is progressing
+//
+-(void)updateProgressOfConnection:(NSURLConnection *)connection withTotalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
+    // get asset
+    NKAssetDownload *dnl = connection.newsstandAssetDownload;
+    UITableViewCell *cell = [table_ cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[[dnl.userInfo objectForKey:@"Index"] intValue] inSection:0]];
+    UIProgressView *progressView = (UIProgressView *)[cell viewWithTag:102];
+    progressView.alpha=1.0;
+    [[cell viewWithTag:103] setAlpha:0.0];
+    progressView.progress=1.f*totalBytesWritten/expectedTotalBytes;
+}
+
+//
+// Delegate of NSURLConnectionDownloadDelegate
+//
+-(void)connection:(NSURLConnection *)connection didWriteData:(long long)bytesWritten totalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
+    
+    NSLog(@"%s: %@,  downloaded [%lld] bytes of [%lld] or %.3f percent", __PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString, totalBytesWritten, expectedTotalBytes, 1.f*totalBytesWritten/expectedTotalBytes);
+    [self updateProgressOfConnection:connection withTotalBytesWritten:totalBytesWritten expectedTotalBytes:expectedTotalBytes];
+}
+
+//
+// Delegate of NSURLConnectionDownloadDelegate
+//
+-(void)connectionDidResumeDownloading:(NSURLConnection *)connection totalBytesWritten:(long long)totalBytesWritten expectedTotalBytes:(long long)expectedTotalBytes {
+    NSLog(@"%s: %@, downloaded [%lld] bytes of [%lld] or %.3f percent", __PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString, totalBytesWritten, expectedTotalBytes, 1.f*totalBytesWritten/expectedTotalBytes);
+    [self updateProgressOfConnection:connection withTotalBytesWritten:totalBytesWritten expectedTotalBytes:expectedTotalBytes];
+}
+
+//
+// Delegate of NSURLConnectionDownloadDelegate
+//
+-(void)connectionDidFinishDownloading:(NSURLConnection *)connection destinationURL:(NSURL *)destinationURL {
+    // copy file to destination URL
+    NKAssetDownload *dnl = connection.newsstandAssetDownload;
+    NKIssue *nkIssue = dnl.issue;
+    NSString *contentPath = [publisher downloadPathForIssue:nkIssue];
+    NSError *moveError=nil;
+    NSLog(@"%s: %@, download complete... file is being copied to %@",__PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString, contentPath);
+    
+    if([[NSFileManager defaultManager] moveItemAtPath:[destinationURL path] toPath:contentPath error:&moveError]==NO) {
+        NSLog(@"%s: Error copying file from %@ to %@",__PRETTY_FUNCTION__, destinationURL,contentPath);
+    }
+    
+    // update the Newsstand icon
+    UIImage *img = [publisher coverImageForIssue:nkIssue];
+    if(img) {
+        [[UIApplication sharedApplication] setNewsstandIconImage:img];
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:1];
+    }
+    
+    [table_ reloadData];
+}
 @end

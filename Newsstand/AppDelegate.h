@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BackgroundTimeRemainingUtility.h"
+#import "Publisher.h"
 
 @class StoreViewController;
 

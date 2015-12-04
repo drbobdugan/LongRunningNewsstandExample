@@ -2,15 +2,16 @@
 //  AppDelegate.m
 //  Newsstand
 //
+//  http://www.viggiosoft.com/blog/blog/2011/10/17/ios-newsstand-tutorial/
+//
 //  Created by Carlo Vigiani on 17/Oct/11.
+//  Modified and simplified by Bob Dugan on 01/Dec/15
 //  Copyright (c) 2011 viggiosoft. All rights reserved.
 //
 
 #import "AppDelegate.h"
 #import "StoreViewController.h"
 #import <NewsstandKit/NewsstandKit.h>
-#import <UAirship.h>
-#import <UAPush.h>
 
 @implementation AppDelegate
 
@@ -23,162 +24,166 @@
     [super dealloc];
 }
 
+// Let the device know we want to receive push notifications for Newsstand notification
+// APNS standard registration to be added inside application:didFinishLaunchingWithOptions:
 -(void)setupPushWithOptions:(NSDictionary *)launchOptions {
-    
-#warning   SETUP YOUR PUSH NOTIFICATIONS
-    //URBAN AIRSHIP PUSH NOTIFICATION CONFIGURATION
-    //Init Airship launch options
-    NSMutableDictionary *airshipConfigOptions = [[[NSMutableDictionary alloc] init] autorelease];
-    [airshipConfigOptions setValue:@"YOUR DEVELOPMENT APP KEY" forKey:@"DEVELOPMENT_APP_KEY"];
-    [airshipConfigOptions setValue:@"YOUR DEVELOPMENT APP SECRECT" forKey:@"DEVELOPMENT_APP_SECRET"];
-    //[airshipConfigOptions setValue:@"Your production app key" forKey:@"PRODUCTION_APP_KEY"];
-    //[airshipConfigOptions setValue:@"Your production app secret" forKey:@"PRODUCTION_APP_SECRET"];
-    
-#ifdef DEBUG
-    [airshipConfigOptions setValue:@"NO" forKey:@"APP_STORE_OR_AD_HOC_BUILD"];
-#else
-    [airshipConfigOptions setValue:@"YES" forKey:@"APP_STORE_OR_AD_HOC_BUILD"];
-#endif
-    
-    NSMutableDictionary *takeOffOptions = [[[NSMutableDictionary alloc] init] autorelease];
-    [takeOffOptions setValue:launchOptions forKey:UAirshipTakeOffOptionsLaunchOptionsKey];
-    [takeOffOptions setValue:airshipConfigOptions forKey:UAirshipTakeOffOptionsAirshipConfigKey];    
-    
-    // Create Airship singleton that's used to talk to Urban Airship servers.
-    // Please replace these with your info from http://go.urbanairship.com
-    [UAirship takeOff:takeOffOptions];
-    
-    [[UAPush shared] resetBadge];//zero badge on startup    
-    [[UAPush shared] registerForRemoteNotificationTypes:UIRemoteNotificationTypeNewsstandContentAvailability|UIRemoteNotificationTypeAlert]; // register for Newsstand and Alerts
-    
+    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeBadge
+                                                                                          |UIUserNotificationTypeSound
+                                                                                          |UIUserNotificationTypeAlert) categories:nil];
+
+    [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    [[UIApplication sharedApplication] registerForRemoteNotifications];
 }
 
+// Schedule a magazine issue for downloading in background
+- (void)doBackgroundDownload
+{
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
+    
+    // in this tutorial we hard-code background download of magazine-2, but normally the magazine to be downloaded
+    // has to be provided in the push notification custom payload
+    NKIssue *issue = [[NKLibrary sharedLibrary] issueWithName:@"Magazine-2"];
+
+    if ([issue downloadingAssets].count == 0)
+    {
+        NSURL *downloadURL = [NSURL URLWithString:@"http://www.viggiosoft.com/media/data/blog/newsstand/magazine-2.pdf"];
+        NSURLRequest *req = [NSURLRequest requestWithURL:downloadURL];
+        NKAssetDownload *assetDownload = [issue addAssetWithRequest:req];
+        [assetDownload downloadWithDelegate:store];
+    }
+    else
+    {
+        NSLog(@"%s: %@ is already being downloaded.",__PRETTY_FUNCTION__,issue);
+        
+    }
+}
+
+// Launch can happen two ways:
+// - foreground launch when user taps on the magazine in the Newsstand
+// - background launch when an Apple Push Notification is received
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // debugging
+    NSLog(@"%s: %@, LAUNCH OPTIONS = %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString, launchOptions);
+    
     // allows more than one new content notification per day (development)
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NKDontThrottleNewsstandContentNotifications"];
     
-    NSLog(@"LAUNCH OPTIONS = %@",launchOptions);
+    // setup push notifications
+    [self setupPushWithOptions:launchOptions];
     
     // initialize the Store view controller - required for all Newsstand functionality
     self.store = [[[StoreViewController alloc] initWithNibName:nil bundle:nil] autorelease];
     nav = [[UINavigationController alloc] initWithRootViewController:store];
  
-    // StoreKit transaction observer
-    [[SKPaymentQueue defaultQueue] addTransactionObserver:self.store];
-    //[[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
-    
     // check if the application will run in background after being called by a push notification
     NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    //if(payload && [payload objectForKey:@"content-available"]) {
-    if(payload) {
-        // schedule for issue downloading in background
-        // in this tutorial we hard-code background download of magazine-2, but normally the magazine to be downloaded
-        // has to be provided in the push notification custom payload
-        NKIssue *issue4 = [[NKLibrary sharedLibrary] issueWithName:@"Magazine-2"];
-        if(issue4) {
-            NSURL *downloadURL = [NSURL URLWithString:@"http://www.viggiosoft.com/media/data/blog/newsstand/magazine-2.pdf"];
-            NSURLRequest *req = [NSURLRequest requestWithURL:downloadURL];
-            NKAssetDownload *assetDownload = [issue4 addAssetWithRequest:req];
-            [assetDownload downloadWithDelegate:store];
-        }
-        
-    }
-    
-    
-    // setup the window
+   
+    // setup the GUI window
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:nav.view];
     [self.window makeKeyAndVisible];
-    
-    // when the app is relaunched, it is better to restore pending downloading assets as abandoned downloadings will be cancelled
+
+    // Restore pending downloading assets so that any abandoned downloadings will be NOT be cancelled
     NKLibrary *nkLib = [NKLibrary sharedLibrary];
     for(NKAssetDownload *asset in [nkLib downloadingAssets]) {
         NSLog(@"Asset to downlaod: %@",asset);
-        [asset downloadWithDelegate:store];            
+        [asset downloadWithDelegate:store];
     }
-    
-    [self setupPushWithOptions:launchOptions];
-
     return YES;
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
 - (void)applicationWillResignActive:(UIApplication *)application
 {
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__,BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
+
+//
+// Delegate for UIApplicationDelegate
+//
+// Invoked if register for remote notifications is successful.  Make sure you copy/paste this token to notify.py
+//
 -(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *deviceTokenString = [[[[deviceToken description]
                                      stringByReplacingOccurrencesOfString: @"<" withString: @""]
                                     stringByReplacingOccurrencesOfString: @">" withString: @""]
                                    stringByReplacingOccurrencesOfString: @" " withString: @""];    
-    NSLog(@"Registered with device token: %@",deviceTokenString);
-    [[UAPush shared] registerDeviceToken:deviceToken]; 
+    NSLog(@"%s: %@, registered with device token: %@",__PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString, deviceTokenString);
+   
 }
 
+//
+// Delegate for UIApplicationDelegate
+//
+// Invoked if register for remote notifications is not successful
+//
 -(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    NSLog(@"Failing in APNS registration: %@",error);
+    NSLog(@"%s: %@, failing in APNS registration: %@", __PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString, error);
 }
 
--(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    UALOG(@"Received remote notification: %@", userInfo);
+//
+// Delegate for UIApplicationDelegate
+//
+// http://stackoverflow.com/questions/22085234/didreceiveremotenotification-fetchcompletionhandler-open-from-icon-vs-push-not
+//
+// Invoked when a remote notification is received whether the application is: in foreground, in background, not running.  Will
+// cause the application to download new issue IN THE BACKGROUND.  If the application is in the foreground, you will see some
+// GUI progress bar as the download progresses.  If the application is in the background you will see download updates in the
+// console window.  If the application is not running, then the application will be loaded and executed in the background and
+// you will see download updates in the console window.
+//
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
     
-    /*
-    [[UAPush shared] handleNotification:userInfo applicationState:application.applicationState];
-    [[UAPush shared] resetBadge]; // zero badge after push received   
-    */
+    NSLog(@"%s: %@, %@",__PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString,userInfo);
     
-    // Now check if it is new content; if so we show an alert
-    if([userInfo objectForKey:@"content-available"]) {
-        if([[UIApplication sharedApplication] applicationState]==UIApplicationStateActive) {
-            // active app -> display an alert
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New issue!"
-                                                            message:@"There is a new issue available."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Close"
-                                                  otherButtonTitles:nil];
-            [alert show];
-            [alert release];            
-        } else {
-            // inactive app -> do something else (e.g. download the latest issue)
-        }
-    }
+    [self doBackgroundDownload];
+    completionHandler(UIBackgroundFetchResultNoData);
+}
+
+//
+// Delegate for UIApplicationDelegate
+//
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier
+  completionHandler:(void (^)()) completionHandler
+{
+    NSLog(@"%s: %@", __PRETTY_FUNCTION__, BackgroundTimeRemainingUtility.backgroundTimeRemainingString);
 }
 
 @end
